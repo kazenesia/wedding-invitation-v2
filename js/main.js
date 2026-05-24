@@ -270,6 +270,23 @@ function initEventListeners() {
     // Typewriter Quotes Observer
     initTypewriterEffect();
     
+    // Bottom Navigation click interception to prevent page refresh due to <base href="/">
+    const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').slice(1);
+            smoothScrollTo(targetId);
+            
+            // Update URL hash without causing a page refresh/reload
+            if (history.pushState) {
+                history.pushState(null, null, `#${targetId}`);
+            } else {
+                location.hash = `#${targetId}`;
+            }
+        });
+    });
+    
     // Heart Rain removed
     
     log('Event listeners initialized ✓');
